@@ -24,6 +24,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "strictPropertyInitialization": false,
+    
     "lib": [
       "ES2022",
       "dom",

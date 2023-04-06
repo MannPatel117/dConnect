@@ -5,12 +5,12 @@ import { AbiItem } from 'web3-utils';
 import { AuthService } from '../auth.service';
 import { ContractService } from '../contract.service';
 import { WalletService } from '../wallet.service';
-import axios from 'axios';
 import { ethers } from 'ethers';
 import { pinJSONToIPFS } from '../pinata.service';
 import { pinFileToIPFS } from '../pinata.service';
 import { Metadata } from '../pinata.service';
-import data from '../../dConnect.json'
+import data from '../../dConnect.json';
+import { pinatatoIPFS } from '../pinata.service';
 declare let window: any
 
 let metamask: any
@@ -22,7 +22,7 @@ const getEthereumContract = async () => {
   const provider = new ethers.BrowserProvider(metamask)
   const signer =await provider.getSigner()
   const transactionContract = new ethers.Contract(
-    '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+    '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
     data.abi,
     signer,
   )
@@ -43,7 +43,7 @@ export class MintComponent implements OnInit{
   public ethereum: any;
   constructor(private router: Router, private authService: AuthService,
     private walletService: WalletService, private contractSerivce: ContractService) {
-    const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
       
   }
@@ -54,7 +54,10 @@ export class MintComponent implements OnInit{
   public following=0;
   public url: string;
   processing= false;
-  
+  tempurl:string;
+  slicedurl:string;
+  dataa:any;
+  fixedurl="https://gateway.pinata.cloud/ipfs/";
   logout() {
     this.authService.logout();
     this.router.navigateByUrl('/main', { replaceUrl: true });
@@ -73,7 +76,7 @@ export class MintComponent implements OnInit{
   }
   async fetchUser(curr_address:string) {
     // get the current account from the provider (e.g., MetaMask)
-    const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
     // call the smart contract method
       this.myobject = await myContract.methods.getUser(curr_address).call();
@@ -87,6 +90,15 @@ export class MintComponent implements OnInit{
       if(this.url == "")
       {
         this.url="https://i.ibb.co/3csvHtd/Screenshot-2023-04-02-at-6-32-1.png";
+      }
+      else{
+        this.slicedurl=this.url;
+        this.slicedurl=this.slicedurl.slice(7);
+        this.slicedurl=this.fixedurl.concat(this.slicedurl);
+        this.dataa= await pinatatoIPFS(this.slicedurl);
+        this.dataa=this.dataa.slice(7);
+        this.dataa=this.fixedurl.concat(this.dataa);
+        this.url=this.dataa;
       }
   
   }
@@ -130,7 +142,7 @@ async mintNFT(ipfsJsonHash:string)
 {
   const contract = await getEthereumContract()
   const transactionParameters = {
-    to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+    to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
     from: this.address,
     data: await contract.mint(this.address, `ipfs://${ipfsJsonHash}`,this.name_post, this.description_post),
   }

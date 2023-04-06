@@ -22,7 +22,7 @@ const getEthereumContract = async () => {
   const provider = new ethers.BrowserProvider(metamask)
   const signer =await provider.getSigner()
   const transactionContract = new ethers.Contract(
-    '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+    '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
     data.abi,
     signer,
   )
@@ -41,7 +41,7 @@ export class SetprofileComponent implements OnInit{
   public ethereum: any;
   constructor(private router: Router, private authService: AuthService,
     private walletService: WalletService, private contractSerivce: ContractService) {
-    const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
       
   }
@@ -72,7 +72,7 @@ export class SetprofileComponent implements OnInit{
   }
   async fetchUser(curr_address:string) {
     // get the current account from the provider (e.g., MetaMask)
-    const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
     // call the smart contract method
       this.myobject = await myContract.methods.getUser(curr_address).call();
@@ -130,7 +130,7 @@ async setURL(ipfsJsonHash:string)
 {
   const contract = await getEthereumContract()
   const transactionParameters = {
-    to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+    to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
     from: this.currentUser,
     data: await contract.setProfile(this.currentUser, `ipfs://${ipfsJsonHash}`),
   }

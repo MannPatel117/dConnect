@@ -19,7 +19,7 @@ const getEthereumContract = async () => {
   const provider = new ethers.BrowserProvider(metamask)
   const signer =await provider.getSigner()
   const transactionContract = new ethers.Contract(
-    '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+    '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
     data.abi,
     signer,
   )
@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
   
   constructor(private router: Router, private authService: AuthService, 
     private walletService: WalletService, private contractSerivce: ContractService) {
-    const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
     
   }
@@ -90,7 +90,7 @@ export class HomeComponent implements OnInit {
   async createNewUser(){
     const contract = await getEthereumContract()
     const transactionParameters = {
-      to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
       from: this.address,
     data: await contract.createUser(this.setName,this.address),
   }
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
   }
   async fetchUser(curr_address:string) {
     // get the current account from the provider (e.g., MetaMask)
-    const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
     // call the smart contract method
       this.userObj = await myContract.methods.getUser(curr_address).call();
@@ -157,7 +157,7 @@ export class HomeComponent implements OnInit {
         continue;
       } 
       else{
-        const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+        const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
         const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
         this.userObj = await myContract.methods.getUser(this.postObj[i]).call();
         this.temppost_id= this.userObj.postIds;
@@ -170,7 +170,7 @@ export class HomeComponent implements OnInit {
     
     for(let m=0;m<this.posts_ids.length;m++)
     {
-        const web3 = new Web3('https://polygon-mumbai.g.alchemy.com/v2/1wE-_ZE0aQMG7acOdjTk1CfJbvz5irZh');
+        const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
         const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
         this.postsObj = await myContract.methods.getPost(this.posts_ids[m]).call();
         this.userObj = await myContract.methods.getUser(this.postsObj[1]).call();
@@ -257,12 +257,13 @@ checkowner(id:number){
   async likePost(idd:number){
     const contract = await getEthereumContract()
     const transactionParameters = {
-      to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
       from: this.currentUser,
       data: await contract.likePost(this.currentUser, idd),
   }
   try {
     await metamask.request({
+     
       method: 'eth_sendTransaction',
       params: [transactionParameters],
     });
@@ -274,12 +275,13 @@ checkowner(id:number){
   async unlikePost(idd:number){
     const contract = await getEthereumContract()
     const transactionParameters = {
-      to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
       from: this.currentUser,
     data: await contract.disLikePost(this.currentUser, idd),
   }
   try {
     await metamask.request({
+      
       method: 'eth_sendTransaction',
       params: [transactionParameters],
     });
@@ -291,7 +293,7 @@ checkowner(id:number){
   async deletePost(idd:number){
     const contract = await getEthereumContract()
     const transactionParameters = {
-      to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
       from: this.currentUser,
     data: await contract.deletePost(idd),
   }
@@ -371,7 +373,7 @@ checkowner(id:number){
   async follow(owner_address:string){
     const contract = await getEthereumContract()
     const transactionParameters = {
-      to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
       from: this.currentUser,
     data: await contract.followUser(this.currentUser, owner_address),
   }
@@ -388,7 +390,7 @@ checkowner(id:number){
   async unfollow(owner_address:string){
     const contract = await getEthereumContract()
     const transactionParameters = {
-      to: '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c',
+      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
       from: this.currentUser,
     data: await contract.unfollowUser(this.currentUser, owner_address),
   }

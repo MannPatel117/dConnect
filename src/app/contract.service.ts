@@ -6,6 +6,6 @@ import data from '../dConnect.json'
 
 export class ContractService {
   
-  contractAddress= '0xefD5c35D087d4aa2b0a3e40c57F8d30aB98FDc6c';
+  contractAddress= '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6';
   contractABI = data.abi;
 }
