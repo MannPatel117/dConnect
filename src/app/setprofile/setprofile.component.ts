@@ -41,7 +41,7 @@ export class SetprofileComponent implements OnInit{
   public ethereum: any;
   constructor(private router: Router, private authService: AuthService,
     private walletService: WalletService, private contractSerivce: ContractService) {
-    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
+    const web3 = new Web3('https://rpc-mumbai.matic.today');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
       
   }

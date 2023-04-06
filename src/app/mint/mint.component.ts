@@ -19,7 +19,7 @@ if (typeof window !== 'undefined') {
   console.log(metamask);
 }
 const getEthereumContract = async () => {
-  const provider = new ethers.BrowserProvider(metamask)
+  const provider = new ethers.BrowserProvider(metamask);
   const signer =await provider.getSigner()
   const transactionContract = new ethers.Contract(
     '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',

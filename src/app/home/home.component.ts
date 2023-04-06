@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import Web3 from 'web3';
 import { ContractService } from '../contract.service';
 import { AbiItem } from 'web3-utils';
-import { ethers } from 'ethers';
+import * as ethers from 'ethers';
 import data from '../../dConnect.json'
 import { pinatatoIPFS } from '../pinata.service';
 declare let window: any
@@ -16,7 +16,7 @@ if (typeof window !== 'undefined') {
   console.log(metamask);
 }
 const getEthereumContract = async () => {
-  const provider = new ethers.BrowserProvider(metamask)
+  const provider = new ethers.BrowserProvider(metamask);
   const signer =await provider.getSigner()
   const transactionContract = new ethers.Contract(
     '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
