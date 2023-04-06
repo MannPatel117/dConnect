@@ -1,0 +1,23 @@
+.hero-img{
+    width: 90%;
+    height: 80%;
+    background-image: url(../../assets/landing.png);
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+
+.second-img{
+    background-image: url(../../assets/tagline.png);
+}
+.third-img{
+    justify-content: flex-end;
+    background-image: url(../../assets/bottom.png);
+}
+.third{
+    justify-content: flex-end;
+}
+
+

@@ -1,0 +1,21 @@
+
+
+input{
+    border: 0px solid;
+}
+input:focus{
+    border: 3px solid yellow;
+}
+.red{
+    background: #FF9494;
+    cursor: not-allowed;
+    border-radius: 15px;
+    border: 4px solid #000000;
+}
+span{
+    background-color: transparent;
+}
+.red:hover{
+    text-decoration: none;
+    
+}

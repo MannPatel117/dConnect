@@ -1,0 +1,50 @@
+<div class="hero-div-op">
+    <div class="side-nav">
+        <a (click)="routeToHome()"><h2 class="logo-text">dConnect</h2></a>
+        <div class="wrap-navv">
+            <a class="active"><h2>Feed</h2></a>
+            <a fragment="how" (click)="navigateToSection('how')"><h2>How it works?</h2></a>
+            <a (click)="routeToProfile()"><h2>Update Profile Pic</h2></a>
+            <a class="join-us custom flexx" (click)="routeToMint()">Mint</a>
+            
+        </div>
+        <a class="logout" (click)="logout()"><div class="logout-btn red flexx">Logout</div></a>
+    </div>
+    <div class="posts">
+        <div class="profile">
+            <h2><span class="spanm">Welcome </span>{{name}} </h2>
+            <div class="div-photo flexx">
+                <img class="profile-img" src={{url}} alt="">
+                <h3 style="padding: 0">{{name}}</h3>
+                <div class="stats flexx" style="flex-direction: row;">
+                    <h3>Followers : {{followers}}</h3>
+                    <h3>Following : {{following}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="posting flexx">
+            <div *ngFor="let po of post"  >
+                <div class="post" *ngIf="po.post_exits==true">
+                    <div class="top-profile">
+                        <div class="top-profile-wrap">
+                            <img src="{{po.owner_profile}}" alt="">
+                            <h4>{{po.owner_name}}</h4>
+                        </div>
+                        <button *ngIf="checkfollow(po.post_ownAdd)" (click)="follow(po.post_ownAdd)" class="follow">Follow</button>
+                        <button *ngIf="checkunfollow(po.post_ownAdd)" (click)="unfollow(po.post_ownAdd)" class="follow unfollow">UnFollow</button>
+                    </div>
+                    <img src="{{po.post_url}}" alt="" class="post_img">
+                    <div class="post_buttons">
+                        <a *ngIf="checklike(po.post_id) != true" (click)="likePost(po.post_id)" style="display: flex; gap:5px"><h3>{{po.post_like}}</h3><img src="../../assets/unlike.svg"  alt=""></a>
+                        <a *ngIf="checklike(po.post_id) == true" (click)="unlikePost(po.post_id)" style="display: flex; gap:5px"><h3>{{po.post_like}}</h3><img src="../../assets/like.svg"  alt=""></a>
+                        <a *ngIf="checkowner(po.post_id) == true" (click)="deletePost(po.post_id)"><img src="../../assets/delete.svg"  alt=""></a>
+                    </div>
+                    <div class="post_text">
+                        <h3>{{po.post_name}}</h3>
+                        <h4>{{po.post_description}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

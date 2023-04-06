@@ -1,0 +1,51 @@
+<div class="hero-div-op">
+    <div class="side-nav">
+        <a (click)="routeToHome()"><h2 class="logo-text">dConnect</h2></a>
+        <div class="wrap-navv">
+            <a (click)="routeToHome()"><h2>Feed</h2></a>
+            <a fragment="how" (click)="navigateToSection('how')"><h2>How it works?</h2></a>
+            <a (click)="routeToProfile()"><h2>Update Profile Pic</h2></a>
+        </div>
+        <a class="logout" (click)="logout()"><div class="logout-btn red flexx">Logout</div></a>
+    </div>
+    <div style="height:100vh;" class="posts">
+        <div class="profile">
+            <h2><span class="spanm">Welcome </span>{{namee}} </h2>
+            <div class="div-photo flexx">
+                <img class="profile-img" src={{url}} alt="">
+                <h3 style="padding: 0">{{namee}}</h3>
+                <div class="stats flexx" style="flex-direction: row;">
+                    <h3>Followers : {{followers}}</h3>
+                    <h3>Following : {{following}}</h3>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="processing==false" class="minter flexx">
+            <div class="flex items-center justify-center w-full">
+                <label for="myfile">Select a file:</label>
+                <input (change)="onFileSelected($event)" id="dropzone-file" type="file" />
+            </div> 
+            <div  class="input flexx">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-neutral-950">Post Name
+                    </label>
+                    <div class="mt-1">
+                        <input [(ngModel)]="name_post" required="true" type="text" required placeholder="PostName" class="block w-full px-5 py-3 text-base placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 ">
+                    </div>
+                </div>
+                <div>
+                    <label for="caption" class="block text-sm font-medium text-neutral-950"> Caption
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" [(ngModel)]="description_post"  required placeholder="Caption" class="block w-full px-5 py-3 text-base placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 ">
+                    </div> 
+                </div>
+                <button class="join-us" (click)="mint()">Mint</button>
+            </div>
+            
+        </div>
+        <div *ngIf="processing==true" style="height: 100%;" class="minter flexx">
+            <h2>Processing..</h2>
+        </div>
+    </div>
+</div>

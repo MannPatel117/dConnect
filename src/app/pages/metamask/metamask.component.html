@@ -1,0 +1,20 @@
+<div class="hero-div">
+    <div class="nav">
+        <a (click)="routeToHome()"><h2 class="logo-text">dConnect</h2></a>
+        
+        <div class="wrap-nav">
+            <a fragment="how" (click)="navigateToSection('how')"><h2>How it works?</h2></a>
+            <a (click)="connectToWallet()"><h2>Connect Wallet</h2></a>
+        </div>
+    </div>
+    <div class="hero flexx">
+        <div class="hero-img">  
+              
+        </div>
+        <a class="join-us flexx" *ngIf="showFlag==false" (click)="connectToWallet()">Connect Wallet</a>
+        <a class="join-us flexx red" *ngIf="showFlag==true" href="https://metamask.io/download/" target="_blank">Install Metamask</a>
+    </div>
+
+   
+</div>
+<button (click)="connectToWallet()">Connect</button>

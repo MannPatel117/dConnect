@@ -1,0 +1,39 @@
+<div class="hero-div">
+    <div class="nav">
+        <a (click)="routeToHome()"><h2 class="logo-text">dConnect</h2></a>
+        
+        <div class="wrap-nav">
+            <a fragment="how" (click)="navigateToSection('how')"><h2>How it works?</h2></a>
+        </div>
+    </div>
+    <div class=" items-center px-5 py-12 lg:px-20">
+        <div class="flex flex-col w-full max-w-md p-10 mx-auto my-6 transition duration-500 ease-in-out transform bg-white rounded-lg md:mt-0">
+            
+            <div class="mt-8">
+                <div>
+                    
+                    <h2 class="mb-3 text-3xl font-extrabold text-center text-neutral-600 overflow-hidden"> Verification Link Sent </h2>
+                    <a style="user-select: none;" class="mt-12 w-full text-center text-blue-600 text-medium"><p class="text-center"> Please Check Spam Folder too</p></a>
+                </div>
+                <div class="mt-6">
+                    <div class="flex flex-col w-full items-center max-w-md p-10 mx-auto my-6">
+                        <img height="200px" width="200px" class="checked items-center text-center" src="../../../assets/checked.png" alt="">
+                    </div>
+                    <div class="relative my-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 text-neutral-600 bg-white"> Continue to </span>
+                        </div>
+                    </div>
+                    <div>
+                        <button (click)="routeToHomePage()" type="submit" class="w-full items-center block px-10 py-3.5 text-base font-medium text-center text-blue-600 transition duration-500 ease-in-out transform border-2 border-white shadow-md rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Home Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

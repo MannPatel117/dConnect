@@ -1,0 +1,11 @@
+.hero-img{
+    width: 90%;
+    height: 80%;
+    background-image: url(../../../assets/MetaMask_Fox.svg.png);
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.red{
+    background: #FF9494;
+}

@@ -1,0 +1,47 @@
+.wrap-navv{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 50px;
+    gap: 20px;
+    overflow-x: hidden;
+    height: 25vh;
+    
+}
+.wrap-navv a{
+    height: fit-content;
+ 
+}
+.wrap-navv a h2{
+    font-size: 18px;
+    height: fit-content;
+    font-weight: 600;
+}
+
+.logout{
+    margin-top: 200px;
+    margin-left: 50px;
+}
+.logout-btn{
+    height: 40px;
+    width: 80px;
+}
+.red{
+    background: #FF9494;
+    border-radius: 10px;
+    border: 2px solid #000000;
+}
+
+.custom{
+    height: 40px;
+    width: 80px;
+    border-radius: 10px;
+    border: 2px solid #000000;
+}
+.minter{
+    width: 100%;
+}
+.input{
+    width: 100%;
+    gap: 20px;
+}

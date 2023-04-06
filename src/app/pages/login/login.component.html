@@ -1,0 +1,59 @@
+
+<div class="hero-div">
+    <div class="nav">
+        <a (click)="routeToHome()"><h2 class="logo-text">dConnect</h2></a>
+        
+        <div class="wrap-nav">
+            <a fragment="how" (click)="navigateToSection('how')"><h2>How it works?</h2></a>
+        </div>
+    </div>
+    <div class="flex min-h-screen overflow-hidden ">
+        <div class="flex flex-col justify-center items-center flex-1 px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+            <div class="w-full max-w-xl mx-auto lg:w-96">
+                <div>
+                    <a style="user-select: none;" class="text-blue-600 text-medium">Welcome Back! :D</a>
+                    <h2 class="mt-6 text-3xl font-extrabold text-neutral-600 overflow-hidden"> Login </h2>
+                </div>
+                <div class="mt-8">
+                    <div class="mt-6">
+                        <form [formGroup]="credentials" class="space-y-6">
+                           
+                            <div class="space-y-1">
+                                <label for="password" class="block text-sm font-medium text-neutral-600"> Password</label>
+                                <div class="mt-1">
+                                    <input formControlName="password" type="password" autocomplete="current-password" required placeholder="Your Password" class="block w-full px-5 py-3 text-base placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg text-neutral-600 bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-300 ">
+                                </div>
+                                <div class="mt-1" *ngIf="credentials.controls['password'].errors && (credentials.controls['password'].dirty || credentials.controls['password'].touched)">
+                                    <small style="color: red;">Invalid Password</small>
+                                </div>
+                            </div>
+                           
+                            <div class="flexx">
+                                <a class="join-us flexx" *ngIf="credentials.valid" (click)="login()">Login</a>
+                                <a class="text-center join-us flexx  red cursor-not-allowed" *ngIf="!credentials.valid">Login</a>
+                            </div>
+                        </form>
+                        <div class="relative my-4">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-slategray-800"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-neutral-600"> OR </span>
+                            </div>
+                        </div>
+                        <div class="flexx">
+                            
+                            <button (click)="routeToRegister()" type="submit" class="join-us flexx">
+                                <div class="flex items-center justify-center">
+                                    <span>Register</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
