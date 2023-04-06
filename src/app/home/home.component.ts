@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import Web3 from 'web3';
 import { ContractService } from '../contract.service';
 import { AbiItem } from 'web3-utils';
-import * as ethers from 'ethers';
+import { ethers } from 'ethers';
 import data from '../../dConnect.json'
 import { pinatatoIPFS } from '../pinata.service';
 declare let window: any
