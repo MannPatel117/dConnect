@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "dconnect-294df"
+  },
+  "targets": {
+    "dconnect-294df": {
+      "hosting": {
+        "client": [
+          "dconnect-294df"
+        ]
+      }
+    }
   }
 }

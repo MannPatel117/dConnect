@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { AuthService } from '../auth.service';
