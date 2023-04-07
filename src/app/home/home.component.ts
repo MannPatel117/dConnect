@@ -141,6 +141,7 @@ export class HomeComponent implements OnInit {
         this.url=this.dataa;
       }
       this.postObj = await myContract.methods.getUsers().call();
+      console.log(this.postObj)
       this.fetchPosts();
   }
   postss: any[];
@@ -160,10 +161,12 @@ export class HomeComponent implements OnInit {
         const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
         const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
         this.userObj = await myContract.methods.getUser(this.postObj[i]).call();
+        console.log(this.userObj);
         this.temppost_id= this.userObj.postIds;
         for(let j=0;j<this.temppost_id.length;j++)
-        {
-          this.posts_ids=this.posts_ids.push(this.temppost_id[j]);
+        { 
+          console.log(this.temppost_id[j]);
+          this.posts_ids=this.posts_ids.concat(this.temppost_id[j]);
         }
       }
     }
@@ -331,7 +334,7 @@ checkowner(id:number){
         this.unfollowCount++;
       } 
     }
-    if(this.followCount==this.unfollowCount)
+    if(this.followCount!=this.unfollowCount)
     {
       return true;
     }
@@ -361,7 +364,7 @@ checkowner(id:number){
         this.unfollowCount++;
       } 
     }
-    if(this.followCount!=this.unfollowCount)
+    if(this.followCount==this.unfollowCount)
     {
       return true;
     }
