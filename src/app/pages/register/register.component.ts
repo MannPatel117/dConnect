@@ -3,6 +3,17 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { WalletService } from '../../wallet.service';
 import { AuthService } from 'src/app/auth.service';
+import Web3 from 'web3';
+import { ContractService } from '../../contract.service';
+import { AbiItem } from 'web3-utils';
+declare let window: any
+
+let metamask: any
+if (typeof window !== 'undefined') {
+  metamask = window.ethereum
+  console.log(metamask);
+}
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -10,10 +21,20 @@ import { AuthService } from 'src/app/auth.service';
 })
 
 export class RegisterComponent implements OnInit{
+  private webb3: Web3;
   public address: String= "";
   constructor(private router: Router, private authService: AuthService, private fb: FormBuilder, 
-    private walletService: WalletService)
-  { }
+    private walletService: WalletService, private contractSerivce: ContractService)
+  {
+    const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
+    const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
+    if (window.ethereum) {
+      this.webb3 = new Web3(window.ethereum);
+      window.ethereum.enable();
+    } else {
+      console.warn('Please install MetaMask to use this application!');
+    }
+   }
   credentials: FormGroup;
   
   
@@ -37,6 +58,10 @@ export class RegisterComponent implements OnInit{
     const user = await this.authService.register(this.credentials.value, this.address);
     if(user)
     {
+      
+      const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+      const accounts = await this.webb3.eth.getAccounts();
+      const result = await contract.methods.createUser(this.credentials.get('name'),this.address).send({ from: this.address});
       this.router.navigateByUrl('/email-sent', {replaceUrl: true});
     }
     else
