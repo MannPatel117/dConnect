@@ -54,8 +54,10 @@ export class RegisterComponent implements OnInit{
     }
   }
   async register(){
-    
+    console.log(this.credentials.get('name'));
+    console.log(this.address);
     const user = await this.authService.register(this.credentials.value, this.address);
+    
     if(user)
     {
       console.log("get in")
