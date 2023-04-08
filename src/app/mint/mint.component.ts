@@ -6,7 +6,6 @@ import { AbiItem } from 'web3-utils';
 import { AuthService } from '../auth.service';
 import { ContractService } from '../contract.service';
 import { WalletService } from '../wallet.service';
-import { ethers } from 'ethers';
 import { pinJSONToIPFS } from '../pinata.service';
 import { pinFileToIPFS } from '../pinata.service';
 import { Metadata } from '../pinata.service';
@@ -19,17 +18,7 @@ if (typeof window !== 'undefined') {
   metamask = window.ethereum
   console.log(metamask);
 }
-const getEthereumContract = async () => {
-  const provider = new ethers.BrowserProvider(metamask);
-  const signer =await provider.getSigner()
-  const transactionContract = new ethers.Contract(
-    '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-    data.abi,
-    signer,
-  )
 
-  return transactionContract
-}
 
 @Component({
   selector: 'app-mint',
@@ -38,6 +27,7 @@ const getEthereumContract = async () => {
 })
 
 export class MintComponent implements OnInit{
+  private webb3: Web3;
   web3: any;
   name_post: string;
   description_post: string;
@@ -141,18 +131,13 @@ export class MintComponent implements OnInit{
 }
 async mintNFT(ipfsJsonHash:string)
 {
-  const contract = await getEthereumContract()
-  const transactionParameters = {
-    to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-    from: this.address,
-    data: await contract.mint(this.address, `ipfs://${ipfsJsonHash}`,this.name_post, this.description_post),
-  }
+  
   try {
-    await metamask.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    })
-    this.router.navigateByUrl('/home');
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.mint(this.address, `ipfs://${ipfsJsonHash}`,this.name_post, this.description_post);
+    console.log(result);
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   } catch (error: any) {
     console.log(error)
   }

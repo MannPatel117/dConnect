@@ -6,7 +6,6 @@ import { AuthService } from '../auth.service';
 import { ContractService } from '../contract.service';
 import { WalletService } from '../wallet.service';
 import axios from 'axios';
-import { ethers } from 'ethers';
 import { pinJSONToIPFS } from '../pinata.service';
 import { pinFileToIPFS } from '../pinata.service';
 import { Metadata } from '../pinata.service';
@@ -18,17 +17,7 @@ if (typeof window !== 'undefined') {
   metamask = window.ethereum
   console.log(metamask);
 }
-const getEthereumContract = async () => {
-  const provider = new ethers.BrowserProvider(metamask)
-  const signer =await provider.getSigner()
-  const transactionContract = new ethers.Contract(
-    '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-    data.abi,
-    signer,
-  )
 
-  return transactionContract
-}
 @Component({
   selector: 'app-setprofile',
   templateUrl: './setprofile.component.html',
@@ -45,6 +34,7 @@ export class SetprofileComponent implements OnInit{
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
       
   }
+  private webb3: Web3;
   public address: string = "";
   myobject: any;
   public namee: string = "";
@@ -128,17 +118,12 @@ export class SetprofileComponent implements OnInit{
 }
 async setURL(ipfsJsonHash:string)
 {
-  const contract = await getEthereumContract()
-  const transactionParameters = {
-    to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-    from: this.currentUser,
-    data: await contract.setProfile(this.currentUser, `ipfs://${ipfsJsonHash}`),
-  }
+  
   try {
-    await metamask.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    })
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.setProfile(this.currentUser, `ipfs://${ipfsJsonHash}`);
+    console.log(result);
     this.router.navigateByUrl('/home');
   } catch (error: any) {
     console.log(error)

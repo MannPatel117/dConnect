@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import Web3 from 'web3';
 import { ContractService } from '../contract.service';
 import { AbiItem } from 'web3-utils';
-import { ethers } from 'ethers';
 import data from '../../dConnect.json'
 import { pinatatoIPFS } from '../pinata.service';
 declare let window: any
@@ -15,17 +14,7 @@ if (typeof window !== 'undefined') {
   metamask = window.ethereum
   console.log(metamask);
 }
-const getEthereumContract = async () => {
-  const provider = new ethers.BrowserProvider(metamask);
-  const signer =await provider.getSigner()
-  const transactionContract = new ethers.Contract(
-    '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-    data.abi,
-    signer,
-  )
 
-  return transactionContract
-}
 
 
 @Component({
@@ -36,12 +25,17 @@ const getEthereumContract = async () => {
 export class HomeComponent implements OnInit {
   web3: any;
   
-  
+  private webb3: Web3;
   constructor(private router: Router, private authService: AuthService, 
     private walletService: WalletService, private contractSerivce: ContractService) {
     const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
-    
+    if (window.ethereum) {
+      this.webb3 = new Web3(window.ethereum);
+      window.ethereum.enable();
+    } else {
+      console.warn('Please install MetaMask to use this application!');
+    }
   }
   
   post : Posts = [];
@@ -50,7 +44,7 @@ export class HomeComponent implements OnInit {
   userObj: any;
   tempUser:any;
   postObj:any;
-  postsObj: any[];
+  postsObj: any;
   public name: string = "";
   public followers=0;
   followArr:any[];
@@ -88,17 +82,13 @@ export class HomeComponent implements OnInit {
   }
   
   async createNewUser(){
-    const contract = await getEthereumContract()
-    const transactionParameters = {
-      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-      from: this.address,
-    data: await contract.createUser(this.setName,this.address),
-  }
+    
   try {
-    await metamask.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    })
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.createUser(this.setName,this.address).send({ from: this.currentUser});
+    console.log(result);
+    this.router.navigateByUrl('/home', { replaceUrl: true });
 
   } catch (error: any) {
     console.log(error)
@@ -173,12 +163,15 @@ export class HomeComponent implements OnInit {
     
     for(let m=0;m<this.posts_ids.length;m++)
     {
+      this.tempUser="";
         const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
         const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress)
         this.postsObj = await myContract.methods.getPost(this.posts_ids[m]).call();
+        console.log("This is post obj",this.postsObj);
         this.userObj = await myContract.methods.getUser(this.postsObj[1]).call();
+        console.log("This is user obj",this.userObj);
         this.tempname = this.userObj[0];
-        this.tempurl=this.userObj.profile_link;
+        this.tempurl=this.userObj[2]
         if(this.tempurl == "")
         {
         this.tempurl="https://i.ibb.co/3csvHtd/Screenshot-2023-04-02-at-6-32-1.png";
@@ -201,7 +194,7 @@ export class HomeComponent implements OnInit {
         this.dataa=this.dataa.slice(7);
         this.dataa=this.fixedurl.concat(this.dataa);
         console.log(this.dataa)
-        this.post.push({ post_id: this.postsObj[0], post_ownAdd: this.postsObj[1], post_url: this.dataa, post_name:this.postsObj[3], post_description: this.postsObj[4], post_like:this.postsObj[5], post_exits:this.postsObj[6],owner_name:this.tempname, owner_profile: this.url});
+        this.post.push({ post_id: this.postsObj[0], post_ownAdd: this.postsObj[1], post_url: this.dataa, post_name:this.postsObj[3], post_description: this.postsObj[4], post_like:this.postsObj[5], post_exits:this.postsObj[6],owner_name:this.tempname, owner_profile: this.tempurl});
     }
     console.log("Posts", this.post);
   }
@@ -243,10 +236,19 @@ checklike(id:number){
   }
 }
 checkowner(id:number){
-  if(this.post[id].post_ownAdd == this.currentUser){
-    return true;
+  for(let n=0;n<this.post.length;n++)
+  {
+    if(this.post[n].post_id==id)
+  {
+    if(this.post[n].post_ownAdd == this.currentUser){
+      return true;
+      
+    }
   }
-  else return false;
+  }
+  
+  
+  return false;
 }
   routeToHome()
   {
@@ -258,54 +260,51 @@ checkowner(id:number){
   }
   
   async likePost(idd:number){
-    const contract = await getEthereumContract()
-    const transactionParameters = {
-      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-      from: this.currentUser,
-      data: await contract.likePost(this.currentUser, idd),
-  }
+   
+
+    //   const accounts = await this.web3.eth.getAccounts();
+    // const contract = await getEthereumContract()
+  //   const transactionParameters = {
+  //     to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
+  //     from: this.currentUser,
+  //     data: await contract.likePost(this.currentUser, idd),
+  // }
   try {
-    await metamask.request({
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.likePost(this.currentUser, idd).send({ from: this.currentUser});
+    console.log(result);
+    this.router.navigateByUrl('/home', { replaceUrl: true });
+    // await metamask.request({
      
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
+    //   method: 'eth_sendTransaction',
+    //   params: [transactionParameters],
+    // });
   } 
   catch (error: any) {
+    console.log("YOYOYOYOOYO")
     console.log(error)
   }
   }
   async unlikePost(idd:number){
-    const contract = await getEthereumContract()
-    const transactionParameters = {
-      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-      from: this.currentUser,
-    data: await contract.disLikePost(this.currentUser, idd),
+    try {
+      const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+      const accounts = await this.webb3.eth.getAccounts();
+      const result = await contract.methods.disLikePost(this.currentUser, idd).send({ from: this.currentUser});
+      console.log(result);
+      this.router.navigateByUrl('/home', { replaceUrl: true });
+    } catch (error: any) {
+      console.log(error)
+    }
   }
-  try {
-    await metamask.request({
-      
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
-    this.ngOnInit();
-  } catch (error: any) {
-    console.log(error)
-  }
-  }
+  
   async deletePost(idd:number){
-    const contract = await getEthereumContract()
-    const transactionParameters = {
-      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-      from: this.currentUser,
-    data: await contract.deletePost(idd),
-  }
   try {
-    await metamask.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
-    this.fetchUser(this.currentUser);
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.deletePost(idd).send({ from: this.currentUser});
+    console.log(result);
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   } catch (error: any) {
     console.log(error)
   }
@@ -336,10 +335,10 @@ checkowner(id:number){
     }
     if(this.followCount!=this.unfollowCount)
     {
-      return true;
+      return false;
     }
     else{
-      return false;
+      return true;
     }
   }
   checkunfollow(owner_address:string)
@@ -364,7 +363,7 @@ checkowner(id:number){
         this.unfollowCount++;
       } 
     }
-    if(this.followCount==this.unfollowCount)
+    if(this.followCount!=this.unfollowCount)
     {
       return true;
     }
@@ -374,35 +373,23 @@ checkowner(id:number){
   }
 
   async follow(owner_address:string){
-    const contract = await getEthereumContract()
-    const transactionParameters = {
-      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-      from: this.currentUser,
-    data: await contract.followUser(this.currentUser, owner_address),
-  }
   try {
-    await metamask.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
-    this.fetchUser(this.currentUser);
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.follow(this.currentUser, owner_address).send({ from: this.currentUser});
+    console.log(result);
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   } catch (error: any) {
     console.log(error)
   }
   }
   async unfollow(owner_address:string){
-    const contract = await getEthereumContract()
-    const transactionParameters = {
-      to: '0x33c159887E8B4c79747a0F7869f47fAa3366A7b6',
-      from: this.currentUser,
-    data: await contract.unfollowUser(this.currentUser, owner_address),
-  }
   try {
-    await metamask.request({
-      method: 'eth_sendTransaction',
-      params: [transactionParameters],
-    });
-    this.fetchUser(this.currentUser);
+    const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.unfollowUser(this.currentUser, owner_address).send({ from: this.currentUser});
+    console.log(result);
+    this.router.navigateByUrl('/home', { replaceUrl: true });
   } catch (error: any) {
     console.log(error)
   }
