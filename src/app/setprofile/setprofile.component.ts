@@ -127,7 +127,8 @@ async setURL(ipfsJsonHash:string)
   try {
     console.log(this.currentUser, "current")
     const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
-    const result = await contract.methods.setProfile(this.currentUser, `ipfs://${ipfsJsonHash}`);
+    const accounts = await this.webb3.eth.getAccounts();
+    const result = await contract.methods.setProfile(this.currentUser, `ipfs://${ipfsJsonHash}`).send({ from: this.address});
     console.log(result);
     this.router.navigateByUrl('/home');
   } catch (error: any) {

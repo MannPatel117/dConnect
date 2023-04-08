@@ -27,9 +27,11 @@ if (typeof window !== 'undefined') {
 })
 
 export class MintComponent implements OnInit{
-  private webb3: Web3;
+  
+  
   web3: any;
   name_post: string;
+  private webb3: Web3;
   description_post: string;
   public ethereum: any;
   constructor(private router: Router, private authService: AuthService,
@@ -142,7 +144,7 @@ async mintNFT(ipfsJsonHash:string)
   try {
     const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
     const accounts = await this.webb3.eth.getAccounts();
-    const result = await contract.methods.mint(this.address, `ipfs://${ipfsJsonHash}`,this.name_post, this.description_post);
+    const result = await contract.methods.mint(this.address, `ipfs://${ipfsJsonHash}`,this.name_post, this.description_post).send({ from: this.address});
     console.log(result);
     this.router.navigateByUrl('/home', { replaceUrl: true });
   } catch (error: any) {
