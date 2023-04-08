@@ -58,7 +58,7 @@ export class RegisterComponent implements OnInit{
     const user = await this.authService.register(this.credentials.value, this.address);
     if(user)
     {
-      
+      console.log("get in")
       const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
       const accounts = await this.webb3.eth.getAccounts();
       const result = await contract.methods.createUser(this.credentials.get('name'),this.address).send({ from: this.address});
