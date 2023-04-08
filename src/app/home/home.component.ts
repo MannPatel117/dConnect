@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit {
     await this.checkWalletConnected();
     console.log(this.address);
     this.authService.getUserById(this.address).subscribe(res =>{
+      console.log(res);
       this.setName=res['name'];
     });
     this.post=[];
