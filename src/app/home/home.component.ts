@@ -77,6 +77,7 @@ export class HomeComponent implements OnInit {
     this.authService.getUserById(this.address).subscribe(res =>{
       this.setName=res['name'];
     });
+    this.post=[];
     this.fetchUser(this.address);
 
   }
@@ -88,7 +89,7 @@ export class HomeComponent implements OnInit {
     const accounts = await this.webb3.eth.getAccounts();
     const result = await contract.methods.createUser(this.setName,this.address).send({ from: this.currentUser});
     console.log(result);
-    this.router.navigateByUrl('/home', { replaceUrl: true });
+    this.ngOnInit();
 
   } catch (error: any) {
     console.log(error)
@@ -108,8 +109,8 @@ export class HomeComponent implements OnInit {
       this.name=this.userObj[0];
       this.currentUser=this.userObj.userAddress;
       this.followers=this.userObj.followers.length;
-      this.followArr=this.userObj.followers;
-      this.unfollowArr=this.userObj.unfollowers;
+      this.followArr=this.userObj.following;
+      this.unfollowArr=this.userObj.unfollowing;
       this.followers=(this.followers)-(this.userObj.unfollowers.length);
       this.following=this.userObj.following.length;
       this.following=(this.following)-(this.userObj.unfollowing.length);
@@ -274,7 +275,7 @@ checkowner(id:number){
     const accounts = await this.webb3.eth.getAccounts();
     const result = await contract.methods.likePost(this.currentUser, idd).send({ from: this.currentUser});
     console.log(result);
-    this.router.navigateByUrl('/home', { replaceUrl: true });
+    this.ngOnInit();
     // await metamask.request({
      
     //   method: 'eth_sendTransaction',
@@ -292,7 +293,7 @@ checkowner(id:number){
       const accounts = await this.webb3.eth.getAccounts();
       const result = await contract.methods.disLikePost(this.currentUser, idd).send({ from: this.currentUser});
       console.log(result);
-      this.router.navigateByUrl('/home', { replaceUrl: true });
+      this.ngOnInit();
     } catch (error: any) {
       console.log(error)
     }
@@ -304,7 +305,7 @@ checkowner(id:number){
     const accounts = await this.webb3.eth.getAccounts();
     const result = await contract.methods.deletePost(idd).send({ from: this.currentUser});
     console.log(result);
-    this.router.navigateByUrl('/home', { replaceUrl: true });
+    this.ngOnInit();
   } catch (error: any) {
     console.log(error)
   }
@@ -319,10 +320,13 @@ checkowner(id:number){
     }
     this.followCount=0;
     this.unfollowCount=0;
+    console.log(this.followArr);
+    console.log(this.unfollowArr)
     for(let i=0; i<this.followArr.length;i++)
     {
       if(this.followArr[i]==owner_address)
       {
+        
         this.followCount++;
       } 
     }
@@ -333,12 +337,13 @@ checkowner(id:number){
         this.unfollowCount++;
       } 
     }
-    if(this.followCount!=this.unfollowCount)
+    if(this.followCount==this.unfollowCount)
     {
-      return false;
+      console.log("chek,",this.followCount,"  ", this.unfollowCount)
+      return true;
     }
     else{
-      return true;
+      return false;
     }
   }
   checkunfollow(owner_address:string)
@@ -376,9 +381,9 @@ checkowner(id:number){
   try {
     const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
     const accounts = await this.webb3.eth.getAccounts();
-    const result = await contract.methods.follow(this.currentUser, owner_address).send({ from: this.currentUser});
+    const result = await contract.methods.followUser(this.currentUser, owner_address).send({ from: this.currentUser});
     console.log(result);
-    this.router.navigateByUrl('/home', { replaceUrl: true });
+    this.ngOnInit();
   } catch (error: any) {
     console.log(error)
   }
@@ -389,7 +394,7 @@ checkowner(id:number){
     const accounts = await this.webb3.eth.getAccounts();
     const result = await contract.methods.unfollowUser(this.currentUser, owner_address).send({ from: this.currentUser});
     console.log(result);
-    this.router.navigateByUrl('/home', { replaceUrl: true });
+    this.ngOnInit();
   } catch (error: any) {
     console.log(error)
   }
