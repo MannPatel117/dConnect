@@ -32,7 +32,12 @@ export class SetprofileComponent implements OnInit{
     private walletService: WalletService, private contractSerivce: ContractService) {
     const web3 = new Web3('https://rpc-mumbai.matic.today');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
-      
+    if (window.ethereum) {
+      this.webb3 = new Web3(window.ethereum);
+      window.ethereum.enable();
+    } else {
+      console.warn('Please install MetaMask to use this application!');
+    }
   }
   private webb3: Web3;
   public address: string = "";
@@ -72,7 +77,7 @@ export class SetprofileComponent implements OnInit{
       this.followers=this.myobject.followers.length;
       this.followers=(this.followers)-(this.myobject.unfollowers.length);
       this.following=this.myobject.following.length;
-      this.following=(this.following)-(this.myobject.unfollowing);
+      this.following=(this.following)-(this.myobject.unfollowing.length);
       this.url=this.myobject.profile_link;
       if(this.url == "")
       {
@@ -120,8 +125,8 @@ async setURL(ipfsJsonHash:string)
 {
   
   try {
+    console.log(this.currentUser, "current")
     const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
-    const accounts = await this.webb3.eth.getAccounts();
     const result = await contract.methods.setProfile(this.currentUser, `ipfs://${ipfsJsonHash}`);
     console.log(result);
     this.router.navigateByUrl('/home');

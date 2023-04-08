@@ -36,7 +36,12 @@ export class MintComponent implements OnInit{
     private walletService: WalletService, private contractSerivce: ContractService) {
     const web3 = new Web3('https://rpc-mumbai.maticvigil.com');
     const myContract = new web3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
-      
+    if (window.ethereum) {
+      this.webb3 = new Web3(window.ethereum);
+      window.ethereum.enable();
+    } else {
+      console.warn('Please install MetaMask to use this application!');
+    } 
   }
   public address: string = "";
   myobject: any;
@@ -74,9 +79,11 @@ export class MintComponent implements OnInit{
       console.log(this.myobject);
       this.namee=this.myobject[0];
       this.followers=this.myobject.followers.length;
-      this.followers=(this.followers)-(this.myobject.unfollowers.length);
+ 
+      this.followers=((this.followers)-(this.myobject.unfollowers.length));
       this.following=this.myobject.following.length;
-      this.following=(this.following)-(this.myobject.unfollowing);
+   
+      this.following=(this.following)-(this.myobject.unfollowing.length);
       this.url=this.myobject.profile_link;
       if(this.url == "")
       {
