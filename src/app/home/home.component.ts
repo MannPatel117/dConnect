@@ -102,7 +102,9 @@ export class HomeComponent implements OnInit {
     // call the smart contract method
       this.userObj = await myContract.methods.getUser(curr_address).call();
       if(this.userObj[0]=="")
+
       {
+        console.log("Udawoidnawoidtriggered")
         this.createNewUser();
       }
       console.log(this.userObj);
