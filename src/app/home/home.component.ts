@@ -78,8 +78,9 @@ export class HomeComponent implements OnInit {
       this.setName=res['name'];
     });
     this.post=[];
+    console.log(this.setName);
     this.fetchUser(this.address);
-
+    
   }
   
   async createNewUser(){
