@@ -89,7 +89,7 @@ export class HomeComponent implements OnInit {
   try {
     const contract = new this.webb3.eth.Contract(this.contractSerivce.contractABI as AbiItem[], this.contractSerivce.contractAddress);
     const accounts = await this.webb3.eth.getAccounts();
-    const result = await contract.methods.createUser(this.setName,this.address).send({ from: this.currentUser});
+    const result = await contract.methods.createUser("travel2",this.address).send({ from: this.currentUser});
     console.log(result);
     this.ngOnInit();
 
